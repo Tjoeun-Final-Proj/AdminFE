@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import '../styles/Sidebar.css';
-import { Users, Activity, CreditCard, FileText, MessageSquare } from 'lucide-react';
+import { Users, Activity, CreditCard, FileText, MessageSquare, LogOut } from 'lucide-react';
 import logoImg from '../assets/logo.png'; 
 
 const Sidebar = () => {
@@ -42,6 +42,10 @@ const Sidebar = () => {
 
       <div className="sidebar-footer">
         <p>Logged in as: <strong>Admin</strong></p>
+        <button type="button" className="footer-logout-btn">
+          <LogOut size={14} />
+          <span>로그아웃</span>
+        </button>
       </div>
     </aside>
   );

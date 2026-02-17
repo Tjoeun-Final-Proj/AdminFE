@@ -13,6 +13,7 @@ body, html {
   min-height: 100%;
   overflow-x: hidden;
   font-family: 'Pretendard', sans-serif;
+  background-color: var(--bg-color);
 }
 
 /* index.css의 body flex + place-items: center 때문에 상단이 잘림 → 블록 흐름으로 위부터 표시 */
@@ -62,4 +63,38 @@ header {
   width: 100%;
   min-height: calc(100vh - var(--header-height));
   background-color: var(--bg-color);
+}
+
+.unified-search-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unified-search-input {
+  width: 280px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #000;
+  border: none;
+  background: #e5e7eb;
+  outline: none;
+}
+
+.unified-search-input::placeholder {
+  color: #6b7280;
+}
+
+.unified-search-btn {
+  padding: 6px 15px;
+  font-size: 13px;
+  color: #000;
+  background: #eee;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.unified-search-btn:hover {
+  background: #e5e7eb;
 }

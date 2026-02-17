@@ -21,13 +21,16 @@ const MemberMgmt = () => {
     <div className="member-page">
       {/* 최상단 통합 검색 */}
       <div className="top-global-search">
-        <input 
-          type="text" 
-          className="global-search-input"
-          placeholder="회원 이름 또는 ID 검색"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="unified-search-box">
+          <input
+            type="text"
+            className="unified-search-input"
+            placeholder="회원 이름 또는 ID검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button type="button" className="unified-search-btn">검색</button>
+        </div>
       </div>
 
       <div className="page-header-row">

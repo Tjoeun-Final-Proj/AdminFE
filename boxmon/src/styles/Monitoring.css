@@ -1,7 +1,8 @@
 /* src/styles/Monitoring.css */
 .monitoring-page {
   width: 100%;
-  height: calc(100vh - 40px); /* 전체 높이 사용 */
+  height: calc(100vh - 40px);
+  color: #000;
 }
 
 .monitoring-container {
@@ -50,18 +51,20 @@
 }
 
 .status-table th {
-  position: sticky; top: 0;
+  position: sticky;
+  top: 0;
   background: #f8fafc;
   padding: 12px 20px;
   text-align: left;
   font-size: 13px;
-  color: #64748b;
+  color: #1e293b;
   border-bottom: 1px solid #e2e8f0;
 }
 
 .status-table td {
   padding: 12px 20px;
   font-size: 14px;
+  color: #000;
   border-bottom: 1px solid #f1f5f9;
 }
 
@@ -74,7 +77,8 @@
   margin-right: 8px;
 }
 
-.cancel-btn {
+.cancel-btn,
+.force-cancel-btn {
   padding: 4px 12px;
   background: #ef4444;
   color: white;
@@ -98,7 +102,7 @@
 
 .sidebar-title {
   font-size: 16px;
-  color: #01439C;
+  color: #000;
   font-weight: bold;
   border-bottom: 2px solid #01439C;
   padding-bottom: 10px;
@@ -125,39 +129,38 @@
   margin-bottom: 15px;
 }
 
-.cargo-user { font-weight: bold; font-size: 16px; }
-
-.cargo-badge {
-  background: #01439C;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
+.cargo-user-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #000;
 }
 
-.cargo-info p {
+.cargo-detail-info p {
   font-size: 13px;
   margin: 5px 0;
-  color: #334155;
+  color: #000;
 }
 
-.cargo-info span { font-weight: bold; color: #64748b; }
-
-.detail-view-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 8px;
-  background: white;
-  border: 1px solid #01439C;
-  color: #01439C;
-  border-radius: 8px;
+.cargo-detail-info span {
   font-weight: bold;
-  cursor: pointer;
+  color: #475569;
 }
 
-.detail-view-btn:hover {
-  background: #01439C;
-  color: white;
+.table-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.table-badge.driver {
+  background: #BCE3EC;
+  color: #01439C;
+}
+
+.table-badge.shipper {
+  background: #E0D8D2;
+  color: #664d3c;
 }
 
 .monitoring-page { width: 100%; height: 100%; }
@@ -175,12 +178,12 @@
 
 .status-table-section { flex: 1; background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow-y: auto; }
 .status-table { width: 100%; border-collapse: collapse; }
-.status-table th { position: sticky; top: 0; background: #f8fafc; padding: 12px 20px; text-align: left; font-size: 13px; border-bottom: 1px solid #e2e8f0; }
-.status-table td { padding: 10px 20px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+.status-table th { position: sticky; top: 0; background: #f8fafc; padding: 12px 20px; text-align: left; font-size: 13px; color: #1e293b; border-bottom: 1px solid #e2e8f0; }
+.status-table td { padding: 10px 20px; font-size: 14px; color: #000; border-bottom: 1px solid #f1f5f9; }
 
 .cancel-btn { padding: 4px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; }
 
 /* 오른쪽 사이드바 */
 .right-sidebar { flex: 1; background: #f1f5f9; border-radius: 12px; padding: 20px; min-width: 320px; display: flex; flex-direction: column; gap: 15px; }
-.sidebar-title { font-size: 16px; color: #01439C; font-weight: bold; border-bottom: 2px solid #01439C; padding-bottom: 10px; }
+.sidebar-title { font-size: 16px; color: #000; font-weight: bold; border-bottom: 2px solid #01439C; padding-bottom: 10px; }
 .cargo-card { background: #BCE3EC; padding: 15px; border-radius: 12px; }
