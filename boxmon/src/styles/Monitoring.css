@@ -1,0 +1,186 @@
+/* src/styles/Monitoring.css */
+.monitoring-page {
+  width: 100%;
+  height: calc(100vh - 40px); /* 전체 높이 사용 */
+}
+
+.monitoring-container {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+}
+
+/* 왼쪽 지도 + 테이블 영역 */
+.left-section {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.map-placeholder {
+  flex: 2;
+  background-color: #e5e7eb;
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #d1d5db;
+}
+
+.map-temp-text { color: #6b7280; font-weight: bold; }
+
+.map-marker {
+  position: absolute;
+  font-size: 24px;
+}
+
+.status-table-section {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow-y: auto;
+}
+
+.status-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.status-table th {
+  position: sticky; top: 0;
+  background: #f8fafc;
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 13px;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.status-table td {
+  padding: 12px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #10b981; /* 초록색 점 */
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.cancel-btn {
+  padding: 4px 12px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* 오른쪽 미배차 리스트 영역 */
+.right-sidebar {
+  flex: 1;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 320px;
+}
+
+.sidebar-title {
+  font-size: 16px;
+  color: #01439C;
+  font-weight: bold;
+  border-bottom: 2px solid #01439C;
+  padding-bottom: 10px;
+}
+
+.cargo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+.cargo-card {
+  background: #BCE3EC; /* 연한 하늘색 배경 */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.cargo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.cargo-user { font-weight: bold; font-size: 16px; }
+
+.cargo-badge {
+  background: #01439C;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.cargo-info p {
+  font-size: 13px;
+  margin: 5px 0;
+  color: #334155;
+}
+
+.cargo-info span { font-weight: bold; color: #64748b; }
+
+.detail-view-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  background: white;
+  border: 1px solid #01439C;
+  color: #01439C;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.detail-view-btn:hover {
+  background: #01439C;
+  color: white;
+}
+
+.monitoring-page { width: 100%; height: 100%; }
+.monitoring-container { display: flex; gap: 20px; height: calc(100vh - 100px); }
+
+.left-section { flex: 3; display: flex; flex-direction: column; gap: 20px; }
+
+/* 지도 영역 높이 설정 */
+.map-area {
+  flex: 2;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  min-height: 450px;
+}
+
+.status-table-section { flex: 1; background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow-y: auto; }
+.status-table { width: 100%; border-collapse: collapse; }
+.status-table th { position: sticky; top: 0; background: #f8fafc; padding: 12px 20px; text-align: left; font-size: 13px; border-bottom: 1px solid #e2e8f0; }
+.status-table td { padding: 10px 20px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+
+.cancel-btn { padding: 4px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; }
+
+/* 오른쪽 사이드바 */
+.right-sidebar { flex: 1; background: #f1f5f9; border-radius: 12px; padding: 20px; min-width: 320px; display: flex; flex-direction: column; gap: 15px; }
+.sidebar-title { font-size: 16px; color: #01439C; font-weight: bold; border-bottom: 2px solid #01439C; padding-bottom: 10px; }
+.cargo-card { background: #BCE3EC; padding: 15px; border-radius: 12px; }

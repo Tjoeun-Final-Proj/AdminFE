@@ -1,0 +1,106 @@
+.inquiry-page {
+  padding: 20px;
+  background-color: #fff;
+}
+
+/* 상단 컨트롤 영역 */
+.inquiry-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.date-tabs {
+  display: flex;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #f8fafc;
+}
+
+.date-tabs .tab {
+  padding: 6px 12px;
+  border: none;
+  border-right: 1px solid #e2e8f0;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.date-tabs .tab.active {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
+.date-input {
+  border: none;
+  padding: 0 10px;
+  font-size: 12px;
+  outline: none;
+  background: transparent;
+}
+
+.refresh-btn {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 6px 15px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* 검색 바 */
+.search-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.inquiry-search-input {
+  width: 280px;
+  padding: 8px 12px;
+  border: none;
+  background: #e5e7eb; /* 이미지의 회색 배경 검색창 반영 */
+  font-size: 13px;
+  outline: none;
+}
+
+/* 테이블 영역 */
+.inquiry-table-container {
+  width: 100%;
+}
+
+.inquiry-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inquiry-table th {
+  text-align: left;
+  padding: 15px 10px;
+  font-size: 15px;
+  color: #475569;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.inquiry-table td {
+  padding: 15px 10px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* 컬럼 너비 조절 */
+.th-time, .td-time { width: 200px; }
+.th-user, .td-user { width: 150px; }
+.td-content { 
+  font-weight: 500;
+  color: #1e293b;
+}

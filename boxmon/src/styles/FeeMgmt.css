@@ -1,0 +1,103 @@
+.fee-page {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-title {
+  color: #01439C;
+  margin-bottom: 30px;
+  font-weight: 800;
+}
+
+/* 현재 수수료 카드 */
+.fee-rate-card {
+  background-color: #f8fafc;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.fee-rate-card h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #334155;
+}
+
+.rate-display {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.rate-number {
+  font-size: 80px;
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.rate-unit {
+  font-size: 30px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.rate-change-btn {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  background-color: #389CD7;
+  color: white;
+  border: none;
+  padding: 6px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 차트 컨테이너 */
+.chart-container {
+  background: white;
+  border: 2px solid #389CD7; /* 이미지의 파란색 테두리 반영 */
+  border-radius: 12px;
+  padding: 40px 20px 20px 20px;
+  margin-bottom: 40px;
+}
+
+/* 하단 누적 수수료 바 */
+.total-fee-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: white;
+  padding: 15px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  gap: 20px;
+}
+
+.total-amount {
+  color: #389CD7;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.total-amount .currency {
+  margin-right: 10px;
+}
+
+.total-label-btn {
+  background-color: #389CD7;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}

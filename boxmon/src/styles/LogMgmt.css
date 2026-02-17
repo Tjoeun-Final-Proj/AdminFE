@@ -1,0 +1,95 @@
+.log-page {
+  padding: 20px;
+  background-color: #fff;
+}
+
+/* 상단 컨트롤 바 */
+.log-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.date-tabs {
+  display: flex;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tab {
+  padding: 6px 12px;
+  background: #f8fafc;
+  border: none;
+  border-right: 1px solid #e2e8f0;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tab.active { background: #fff; font-weight: bold; }
+
+.date-picker {
+  border: none;
+  padding: 0 10px;
+  font-size: 12px;
+  outline: none;
+}
+
+.refresh-btn {
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* 차트 영역 */
+.log-chart-container {
+  margin-bottom: 50px;
+}
+
+/* 검색 바 */
+.log-search-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.log-search-input {
+  width: 250px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: #eee;
+  font-size: 13px;
+  outline: none;
+}
+
+/* 로그 테이블 */
+.log-table-container {
+  border-top: 1px solid #eee;
+}
+
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.log-table th {
+  text-align: left;
+  padding: 15px 10px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+.log-table td {
+  padding: 12px 10px;
+  font-size: 13px;
+  color: #555;
+}
+
+.time-cell, .admin-cell { width: 150px; }
+.type-cell { width: 150px; }
+.content-cell { font-weight: 500; color: #000; }

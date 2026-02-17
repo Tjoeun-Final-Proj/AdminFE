@@ -1,0 +1,50 @@
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import '../styles/Sidebar.css';
+import { Users, Activity, CreditCard, FileText, MessageSquare } from 'lucide-react';
+import logoImg from '../assets/logo.png'; 
+
+const Sidebar = () => {
+  const menus = [
+    { name: '회원 관리', icon: <Users size={18} />, path: '/members' },
+    { name: '모니터링', icon: <Activity size={18} />, path: '/monitoring' },
+    { name: '수수료 관리', icon: <CreditCard size={18} />, path: '/fees' },
+    { name: '로그 보기', icon: <FileText size={18} />, path: '/logs' },
+    { name: '문의 보기', icon: <MessageSquare size={18} />, path: '/inquiry' },
+  ];
+
+  return (
+    <aside className="sidebar">
+      <div className="logo-section">
+        <img src={logoImg} alt="Logo" className="logo-img" />
+      </div>
+      
+      <nav className="nav-menu">
+        <p className="menu-label">ADMIN MENU</p>
+        <br></br>
+        <br></br>
+        <br></br>
+        <ul>
+          {menus.map((menu, index) => (
+            <li key={index}>
+              <NavLink 
+                to={menu.path} 
+                className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}
+              >
+                <span className="menu-icon">{menu.icon}</span>
+                &nbsp;
+                <span className="menu-text">{menu.name}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div className="sidebar-footer">
+        <p>Logged in as: <strong>Admin</strong></p>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;

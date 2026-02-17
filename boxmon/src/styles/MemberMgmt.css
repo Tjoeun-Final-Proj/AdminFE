@@ -1,0 +1,48 @@
+.member-page { width: 100%; }
+
+.top-global-search { margin-bottom: 20px; }
+.global-search-input {
+  width: 100%; max-width: 350px;
+  padding: 10px 16px;
+  border: 1px solid #e2e8f0; border-radius: 6px;
+  font-size: 13px; outline: none;
+}
+
+.page-header-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+.page-header-row h1 { font-size: 22px; color: #01439C; font-weight: 700; }
+.member-count { font-size: 12px; color: #94a3b8; }
+
+.list-filter-bar { display: flex; gap: 8px; margin-bottom: 15px; }
+.filter-tab {
+  padding: 6px 16px; border: none; background: #f1f5f9;
+  border-radius: 4px; cursor: pointer; font-size: 13px; color: #475569;
+}
+.filter-tab.active { background: #01439C; color: white; }
+
+/* 🌟 슬림 테이블 스타일 */
+.table-container {
+  background: white; border: 1px solid #e2e8f0;
+  border-radius: 8px; overflow: hidden;
+}
+.member-table { width: 100%; border-collapse: collapse; }
+.member-table th {
+  background-color: #f8fafc; padding: 10px 15px; /* 헤더 높이 축소 */
+  font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+.member-table td {
+  padding: 8px 15px; /* 셀 높이 축소하여 얇게 만듦 */
+  font-size: 13px; color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+.member-table tbody tr:hover { background-color: #f8fafc; }
+
+/* 배지 사이즈 축소 */
+.table-badge {
+  padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600;
+}
+.table-badge.driver { background: #BCE3EC; color: #01439C; }
+.table-badge.shipper { background: #E0D8D2; color: #664d3c; }
+
+.table-name-cell { font-weight: 500; }
+.table-id-cell { color: #94a3b8; font-size: 12px; }

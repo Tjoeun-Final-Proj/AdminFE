@@ -1,0 +1,65 @@
+:root {
+  --sidebar-width: 260px;
+  --header-height: 60px;
+  --primary-blue: #01439C;
+  --sky-blue: #BCE3EC;
+  --bg-color: #f8fafc;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body, html {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* index.css의 body flex + place-items: center 때문에 상단이 잘림 → 블록 흐름으로 위부터 표시 */
+body {
+  display: block;
+  place-items: unset;
+}
+
+.admin-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  z-index: 100;
+}
+
+.main-layout {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* 내부 요소가 넘칠 때 가로 너비를 유지해줌 */
+}
+
+/* 상단이 잘리지 않도록 정렬 */
+header {
+  height: var(--header-height);
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.content-area {
+  padding: 40px;
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
+  background-color: var(--bg-color);
+}

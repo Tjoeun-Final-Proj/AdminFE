@@ -1,0 +1,59 @@
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  cursor: pointer;
+  color: var(--text-dark);
+  text-decoration: none; 
+  transition: all 0.2s ease;
+}
+
+.menu-item.active {
+  background-color: var(--sky-blue);
+  color: var(--primary-blue);
+  border-right: 4px solid var(--primary-blue);
+  font-weight: bold;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: white;
+  border-right: 1px solid #e0e0e0;
+  position: fixed; 
+  left: 0;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 로고가 들어가는 상단 영역의 여백 조절 */
+.logo-section {
+  padding: 20px 20px; 
+  display: flex;
+  justify-content: first baseline; 
+  align-items: center;     /* 세로 중앙 정렬 */
+}
+
+/* 실제 로고 이미지 크기 조절 */
+.logo-img {
+  width: 30px;      
+  height: auto;     
+  object-fit: contain;
+  
+}
+
+.sidebar-footer {
+  margin-top:auto;   
+  padding: 20px;
+  font-size: 13px;
+  border-top: 1px solid #eee;
+
+}
