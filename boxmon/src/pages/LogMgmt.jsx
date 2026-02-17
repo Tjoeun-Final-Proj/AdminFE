@@ -2,8 +2,22 @@ import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import '../styles/LogMgmt.css';
 
+const DATE_TABS = ['Today', 'Yesterday', 'Last 7 days', 'Last 30 days', 'Last month'];
+
+const getTodayString = () => {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+};
+
 const LogMgmt = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [dateTab, setDateTab] = useState('Today');
+  const [selectedDate, setSelectedDate] = useState(getTodayString);
+
+  const handleRefresh = () => {
+    setDateTab('Today');
+    setSelectedDate(getTodayString());
+  };
 
   // 1. 상단 차트 데이터 (시간대별 로그 발생량 예시)
   const chartData = [
@@ -27,14 +41,24 @@ const LogMgmt = () => {
       {/* 상단 필터 및 컨트롤 바 */}
       <div className="log-controls">
         <div className="date-tabs">
-          <button className="tab active">Today</button>
-          <button className="tab">Yesterday</button>
-          <button className="tab">Last 7 days</button>
-          <button className="tab">Last 30 days</button>
-          <button className="tab">Last month</button>
-          <input type="date" className="date-picker" defaultValue="2022-02-08" />
+          {DATE_TABS.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              className={`tab ${dateTab === tab ? 'active' : ''}`}
+              onClick={() => setDateTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+          <input
+            type="date"
+            className="date-picker"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
         </div>
-        <button className="refresh-btn">🔄 새로고침</button>
+        <button type="button" className="refresh-btn" onClick={handleRefresh}>🔄 새로고침</button>
       </div>
 
       {/* 차트 영역 */}
@@ -50,15 +74,17 @@ const LogMgmt = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* 검색 바 */}
       <div className="log-search-row">
-        <input 
-          type="text" 
-          placeholder="검색어를 입력하십시오" 
-          className="log-search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="unified-search-box">
+          <input
+            type="text"
+            className="unified-search-input"
+            placeholder="log검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button type="button" className="unified-search-btn">검색</button>
+        </div>
       </div>
 
       {/* 로그 테이블 */}

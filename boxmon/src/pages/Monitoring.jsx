@@ -90,14 +90,13 @@ const Monitoring = () => {
               <div className="cargo-card" key={idx}>
                 <div className="cargo-header">
                   <span className="cargo-user-name">👤 {cargo.name} 님</span>
-                  <span className="cargo-role-badge">화주</span>
+                  <span className={`table-badge ${cargo.role === '차주' ? 'driver' : 'shipper'}`}>{cargo.role}</span>
                 </div>
                 <div className="cargo-detail-info">
                   <p><span>id :</span> {cargo.id}</p>
                   <p><span>출발지 :</span> {cargo.start}</p>
                   <p><span>도착지 :</span> {cargo.end}</p>
                 </div>
-                <button className="cargo-detail-btn">상세보기</button>
               </div>
             ))}
           </div>

@@ -25,9 +25,14 @@
   border-right: 1px solid #e2e8f0;
   font-size: 12px;
   cursor: pointer;
+  color: #64748b;
 }
 
-.tab.active { background: #fff; font-weight: bold; }
+.tab.active {
+  background: #fff;
+  font-weight: bold;
+  color: #000;
+}
 
 .date-picker {
   border: none;
@@ -43,6 +48,7 @@
   border-radius: 4px;
   font-size: 12px;
   cursor: pointer;
+  color: #000;
 }
 
 /* 차트 영역 */
@@ -50,20 +56,10 @@
   margin-bottom: 50px;
 }
 
-/* 검색 바 */
 .log-search-row {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 15px;
-}
-
-.log-search-input {
-  width: 250px;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  background: #eee;
-  font-size: 13px;
-  outline: none;
 }
 
 /* 로그 테이블 */

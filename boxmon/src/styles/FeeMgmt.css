@@ -6,7 +6,7 @@
 }
 
 .page-title {
-  color: #01439C;
+  color: #000;
   margin-bottom: 30px;
   font-weight: 800;
 }
@@ -91,13 +91,94 @@
   margin-right: 10px;
 }
 
-.total-label-btn {
-  background-color: #389CD7;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 10px;
+.total-label-text {
   font-size: 16px;
+  font-weight: 600;
+  color: #000;
+}
+
+.fee-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.fee-modal {
+  background: white;
+  color: #000;
+  border-radius: 16px;
+  padding: 28px 32px;
+  min-width: 320px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.fee-modal-title {
+  margin: 0 0 20px 0;
+  font-size: 18px;
   font-weight: 700;
+  color: #000;
+}
+
+.fee-modal-field {
+  margin-bottom: 24px;
+}
+
+.fee-modal-field label {
+  display: block;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.fee-modal-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #e5e7eb;
+  color: #000;
+  box-sizing: border-box;
+}
+
+.fee-modal-input:focus {
+  outline: none;
+  border-color: #389CD7;
+}
+
+.fee-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.fee-modal-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  border: none;
+}
+
+.fee-modal-btn.cancel {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.fee-modal-btn.cancel:hover {
+  background: #e2e8f0;
+}
+
+.fee-modal-btn.confirm {
+  background: #389CD7;
+  color: white;
+}
+
+.fee-modal-btn.confirm:hover {
+  background: #01439C;
 }

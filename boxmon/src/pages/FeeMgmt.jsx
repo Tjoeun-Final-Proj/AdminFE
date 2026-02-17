@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import '../styles/FeeMgmt.css';
 
 const FeeMgmt = () => {
-  // 샘플 데이터: 월별 수수료 수익 현황
+  const [currentRate, setCurrentRate] = useState(5);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editValue, setEditValue] = useState('5');
+
+  const openModal = () => {
+    setEditValue(String(currentRate));
+    setModalOpen(true);
+  };
+
+  const closeModal = () => setModalOpen(false);
+
+  const handleConfirm = () => {
+    const num = Number(editValue);
+    if (!Number.isNaN(num) && num >= 0 && num <= 100) {
+      setCurrentRate(num);
+      closeModal();
+    }
+  };
+
   const data = [
     { name: 'Jan', fee: 55 }, { name: 'Feb', fee: 35 }, { name: 'Mar', fee: 65 },
     { name: 'Apr', fee: 70 }, { name: 'May', fee: 28 }, { name: 'Jun', fee: 22 },
@@ -15,14 +33,13 @@ const FeeMgmt = () => {
     <div className="fee-page">
       <h1 className="page-title">수수료 관리</h1>
 
-      {/* 1. 현재 수수료율 카드 */}
       <div className="fee-rate-card">
         <h3>현재 수수료</h3>
         <div className="rate-display">
-          <span className="rate-number">5</span>
+          <span className="rate-number">{currentRate}</span>
           <span className="rate-unit">%</span>
         </div>
-        <button className="rate-change-btn">수정 〉</button>
+        <button type="button" className="rate-change-btn" onClick={openModal}>수정 〉</button>
       </div>
 
       {/* 2. 월별 수수료 차트 영역 */}
@@ -54,8 +71,32 @@ const FeeMgmt = () => {
           <span className="currency">$</span>
           <span className="amount">3000000</span>
         </div>
-        <button className="total-label-btn">누적 수수료</button>
+        <span className="total-label-text">누적 수수료</span>
       </div>
+
+      {modalOpen && (
+        <div className="fee-modal-overlay" onClick={closeModal}>
+          <div className="fee-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="fee-modal-title">수수료율 수정</h3>
+            <div className="fee-modal-field">
+              <label htmlFor="fee-rate-input">수수료 (%)</label>
+              <input
+                id="fee-rate-input"
+                type="number"
+                min={0}
+                max={100}
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                className="fee-modal-input"
+              />
+            </div>
+            <div className="fee-modal-actions">
+              <button type="button" className="fee-modal-btn cancel" onClick={closeModal}>취소</button>
+              <button type="button" className="fee-modal-btn confirm" onClick={handleConfirm}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
