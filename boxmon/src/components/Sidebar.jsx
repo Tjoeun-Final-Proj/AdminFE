@@ -1,10 +1,19 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import '../styles/Sidebar.css';
 import { Users, Activity, CreditCard, FileText, MessageSquare, LogOut } from 'lucide-react';
-import logoImg from '../assets/logo.png'; 
+import logoImg from '../assets/logo.png';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
+
   const menus = [
     { name: '회원 관리', icon: <Users size={18} />, path: '/members' },
     { name: '모니터링', icon: <Activity size={18} />, path: '/monitoring' },
@@ -42,7 +51,7 @@ const Sidebar = () => {
 
       <div className="sidebar-footer">
         <p>Logged in as: <strong>Admin</strong></p>
-        <button type="button" className="footer-logout-btn">
+        <button type="button" className="footer-logout-btn" onClick={handleLogout}>
           <LogOut size={14} />
           <span>로그아웃</span>
         </button>
