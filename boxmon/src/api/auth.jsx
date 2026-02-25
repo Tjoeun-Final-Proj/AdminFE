@@ -19,3 +19,40 @@ export async function loginAdmin({ loginId, password }) {
     throw new Error('서버에 연결할 수 없습니다. 백엔드 실행 여부를 확인하세요.');
   }
 }
+
+/** GET /api/admin/me → 현재 로그인한 관리자 이름 (Authorization: Bearer 필요) */
+export async function getAdminName(accessToken) {
+  const { data } = await axios.get(`${API_BASE}/admin/me`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return typeof data === 'string' ? data : (data?.name ?? data ?? null);
+}
+
+/** GET /api/admin/list → 관리자 목록 [{ adminId, loginId, name }] (Authorization: Bearer 필요) */
+export async function getAdminList(accessToken) {
+  const { data } = await axios.get(`${API_BASE}/admin/list`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return Array.isArray(data) ? data : [];
+}
+
+/** GET /api/user/list → 사용자 목록 (userType: DRIVER | SHIPPER) (Authorization: Bearer 필요) */
+export async function getUserList(accessToken) {
+  const { data } = await axios.get(`${API_BASE}/user/list`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return Array.isArray(data) ? data : [];
+}
+
+/** AdminRequest: name, loginId, password. POST /api/admin/create */
+export async function createAdmin({ name, loginId, password }) {
+  try {
+    await axios.post(`${API_BASE}/admin/create`, { name, loginId, password });
+  } catch (err) {
+    if (err.response) {
+      const msg = err.response.data?.message ?? err.response.data ?? `생성 실패: ${err.response.status}`;
+      throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+    }
+    throw new Error('서버에 연결할 수 없습니다. 백엔드 실행 여부를 확인하세요.');
+  }
+}
