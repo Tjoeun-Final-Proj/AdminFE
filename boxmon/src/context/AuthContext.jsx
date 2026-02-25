@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { getAdminName } from '../api/auth';
 
 const TOKEN_KEY_ACCESS = 'admin_access_token';
 const TOKEN_KEY_REFRESH = 'admin_refresh_token';
@@ -8,6 +9,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [accessToken, setAccessTokenState] = useState(() => localStorage.getItem(TOKEN_KEY_ACCESS));
   const [refreshToken, setRefreshTokenState] = useState(() => localStorage.getItem(TOKEN_KEY_REFRESH));
+  const [displayName, setDisplayNameState] = useState(null);
   const [isChecking, setIsChecking] = useState(true);
 
   const setTokens = useCallback((access, refresh) => {
@@ -17,6 +19,7 @@ export function AuthProvider({ children }) {
     } else {
       localStorage.removeItem(TOKEN_KEY_ACCESS);
       setAccessTokenState(null);
+      setDisplayNameState(null);
     }
     if (refresh) {
       localStorage.setItem(TOKEN_KEY_REFRESH, refresh);
@@ -34,12 +37,23 @@ export function AuthProvider({ children }) {
   const isAuthenticated = Boolean(accessToken);
 
   useEffect(() => {
+    if (accessToken) {
+      getAdminName(accessToken)
+        .then((name) => setDisplayNameState(name ?? null))
+        .catch(() => setDisplayNameState(null));
+    } else {
+      setDisplayNameState(null);
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
     setIsChecking(false);
   }, []);
 
   const value = {
     accessToken,
     refreshToken,
+    displayName,
     isAuthenticated,
     setTokens,
     logout,

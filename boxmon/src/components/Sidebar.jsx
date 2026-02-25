@@ -7,7 +7,7 @@ import logoImg from '../assets/logo.png';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, displayName } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -50,7 +50,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
-        <p>Logged in as: <strong>Admin</strong></p>
+        <p>Logged in as : <strong>{displayName || 'Admin'}</strong></p>
         <button type="button" className="footer-logout-btn" onClick={handleLogout}>
           <LogOut size={14} />
           <span>로그아웃</span>
