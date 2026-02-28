@@ -1,24 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../context/AuthContext';
+import { getFeeSetting, setFeeSetting } from '../api/Fee';
 import '../styles/FeeMgmt.css';
 
 const FeeMgmt = () => {
-  const [currentRate, setCurrentRate] = useState(5);
+  const { accessToken } = useAuth();
+  const [currentRate, setCurrentRate] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editValue, setEditValue] = useState('5');
+  const [editValue, setEditValue] = useState('');
+
+  useEffect(() => {
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    getFeeSetting(accessToken)
+      .then((val) => {
+        if (val !== null && val !== undefined) {
+          const num = Number(val);
+          setCurrentRate(Number.isNaN(num) ? val : num);
+        } else {
+          setCurrentRate(null);
+        }
+      })
+      .catch((err) => setError(err.message || '수수료율 조회에 실패했습니다.'))
+      .finally(() => setLoading(false));
+  }, [accessToken]);
 
   const openModal = () => {
-    setEditValue(String(currentRate));
+    setEditValue(currentRate != null ? String(Math.round(currentRate * 10000) / 100) : '');
     setModalOpen(true);
   };
 
   const closeModal = () => setModalOpen(false);
 
-  const handleConfirm = () => {
-    const num = Number(editValue);
-    if (!Number.isNaN(num) && num >= 0 && num <= 100) {
-      setCurrentRate(num);
+  const handleConfirm = async () => {
+    const percentNum = Number(editValue);
+    if (Number.isNaN(percentNum) || percentNum < 0 || percentNum > 100) return;
+    if (!accessToken) return;
+    const decimalValue = percentNum / 100;
+    setSaving(true);
+    setError(null);
+    try {
+      await setFeeSetting(accessToken, decimalValue);
+      setCurrentRate(decimalValue);
       closeModal();
+      const next = await getFeeSetting(accessToken);
+      if (next !== null && next !== undefined) {
+        const n = Number(next);
+        setCurrentRate(Number.isNaN(n) ? next : n);
+      }
+    } catch (err) {
+      const res = err.response?.data;
+      const msg = typeof res === 'string' ? res : res?.message ?? res?.error ?? (res && typeof res === 'object' ? JSON.stringify(res) : null);
+      setError(msg || err.message || '수수료율 저장에 실패했습니다.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -35,11 +78,12 @@ const FeeMgmt = () => {
 
       <div className="fee-rate-card">
         <h3>현재 수수료</h3>
+        {error && <p className="fee-rate-error">{error}</p>}
         <div className="rate-display">
-          <span className="rate-number">{currentRate}</span>
+          <span className="rate-number">{loading ? '…' : (currentRate != null ? (Math.round(currentRate * 10000) / 100) : '-')}</span>
           <span className="rate-unit">%</span>
         </div>
-        <button type="button" className="rate-change-btn" onClick={openModal}>수정 〉</button>
+        <button type="button" className="rate-change-btn" onClick={openModal} disabled={loading}>수정 〉</button>
       </div>
 
       {/* 2. 월별 수수료 차트 영역 */}
@@ -85,14 +129,15 @@ const FeeMgmt = () => {
                 type="number"
                 min={0}
                 max={100}
+                step={0.01}
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 className="fee-modal-input"
               />
             </div>
             <div className="fee-modal-actions">
-              <button type="button" className="fee-modal-btn cancel" onClick={closeModal}>취소</button>
-              <button type="button" className="fee-modal-btn confirm" onClick={handleConfirm}>확인</button>
+              <button type="button" className="fee-modal-btn cancel" onClick={closeModal} disabled={saving}>취소</button>
+              <button type="button" className="fee-modal-btn confirm" onClick={handleConfirm} disabled={saving}>{saving ? '저장 중...' : '확인'}</button>
             </div>
           </div>
         </div>

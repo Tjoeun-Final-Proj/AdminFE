@@ -186,4 +186,108 @@
 /* 오른쪽 사이드바 */
 .right-sidebar { flex: 1; background: #f1f5f9; border-radius: 12px; padding: 20px; min-width: 320px; display: flex; flex-direction: column; gap: 15px; }
 .sidebar-title { font-size: 16px; color: #000; font-weight: bold; border-bottom: 2px solid #01439C; padding-bottom: 10px; }
-.cargo-card { background: #BCE3EC; padding: 15px; border-radius: 12px; }
+.cargo-card {
+  background: #BCE3EC;
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.cargo-card:hover { opacity: 0.95; }
+
+.monitoring-loading,
+.monitoring-empty {
+  padding: 16px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.monitoring-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.monitoring-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 320px;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+.monitoring-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.monitoring-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.monitoring-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.monitoring-modal-close:hover { color: #0f172a; }
+
+.monitoring-detail-body p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #334155;
+}
+
+.monitoring-detail-body span {
+  font-weight: 600;
+  color: #475569;
+  margin-right: 8px;
+}
+
+.monitoring-detail-error {
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.force-cancel-btn { cursor: pointer; }
+
+.monitoring-detail-btn {
+  padding: 4px 12px;
+  background: var(--primary-blue, #01439C);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.monitoring-detail-btn:hover { opacity: 0.9; }
+
+.monitoring-refresh-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  background: var(--primary-blue, #01439C);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.monitoring-refresh-btn:hover:not(:disabled) { opacity: 0.9; }
+.monitoring-refresh-btn:disabled { opacity: 0.7; cursor: not-allowed; }

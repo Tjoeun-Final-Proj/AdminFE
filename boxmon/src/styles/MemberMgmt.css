@@ -31,6 +31,8 @@
 }
 .member-table tbody tr:hover { background-color: #f8fafc; }
 
+.member-table-row-clickable { cursor: pointer; }
+
 /* 배지 사이즈 축소 */
 .table-badge {
   padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600;
@@ -98,3 +100,227 @@
 .modal-btn.cancel:hover { background: #e2e8f0; }
 .modal-btn.submit { background: var(--primary-blue, #01439C); color: #fff; }
 .modal-btn.submit:hover { background: #013078; }
+
+.member-detail { color: #000; }
+
+.member-detail-back {
+  margin-bottom: 20px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--primary-blue, #01439C);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.member-detail-back:hover { text-decoration: underline; }
+
+.member-detail-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.member-detail-header-row .member-detail-title {
+  margin-bottom: 0;
+}
+
+.member-detail-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 24px;
+}
+
+.member-detail-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.member-detail-row {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.member-detail-row:last-child { margin-bottom: 0; }
+
+.member-detail-label {
+  display: inline-block;
+  width: 120px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.member-detail-loading {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0 0 16px 0;
+}
+
+.member-detail-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 0 0 16px 0;
+}
+
+.member-detail-fallback-caption {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 12px 0;
+}
+
+.member-detail-actions {
+  margin-top: 24px;
+}
+
+.member-detail-suspend-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #dc2626;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.member-detail-suspend-btn:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.member-detail-suspend-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.member-detail-restore-btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #059669;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.member-detail-restore-btn:hover:not(:disabled) {
+  background: #047857;
+}
+
+.member-detail-restore-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* 경고 섹션 */
+.member-detail-penalty-section {
+  margin-top: 24px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.member-detail-penalty-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.member-detail-penalty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.member-detail-penalty-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.member-detail-penalty-add-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--primary-blue, #01439C);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.member-detail-penalty-add-btn:hover {
+  background: #013078;
+}
+
+.member-detail-penalty-delete-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: #dc2626;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.member-detail-penalty-delete-btn:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.member-detail-penalty-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.member-detail-penalty-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.member-detail-penalty-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.member-detail-penalty-table th {
+  background: #f8fafc;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.member-detail-penalty-table td {
+  padding: 10px 12px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.member-detail-penalty-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.member-detail-penalty-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.member-detail-penalty-empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 24px !important;
+}
