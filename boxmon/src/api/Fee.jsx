@@ -12,6 +12,14 @@ export async function getFeeSetting(accessToken) {
   return null;
 }
 
+/** GET /api/admin/settings/fee/graph/2weeks → 2주 일별 수수료 [{ date, feeRate, changed }] */
+export async function getFeeGraph2Weeks(accessToken) {
+  const { data } = await axios.get(`${API_BASE}/admin/settings/fee/graph/2weeks`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return data || { fromDate: null, toDate: null, unit: 'DAY', points: [] };
+}
+
 /** PUT /api/admin/settings/fee → 수수료율 설정 (RequestBody: { value } - 문자열 또는 숫자) */
 export async function setFeeSetting(accessToken, value) {
   const num = Number(value);

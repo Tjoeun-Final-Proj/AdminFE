@@ -4,6 +4,33 @@ import { useAuth } from '../context/AuthContext';
 import { getUnassignedBasic, getUnassignedDetail, getAssignedBasic, getAssignedDetail } from '../api/Shipment';
 import '../styles/Monitoring.css';
 
+const NAVER_MAP_CLIENT_ID = import.meta.env.VITE_NAVER_MAP_CLIENT_ID || '';
+
+function loadNaverMapScript() {
+  return new Promise((resolve, reject) => {
+    if (window.naver && window.naver.maps) {
+      resolve();
+      return;
+    }
+    if (!NAVER_MAP_CLIENT_ID) {
+      reject(new Error('NO_CLIENT_ID'));
+      return;
+    }
+    const existing = document.querySelector('script[src*="map.naver.com"]');
+    if (existing) {
+      if (window.naver && window.naver.maps) resolve();
+      else existing.addEventListener('load', () => resolve());
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NAVER_MAP_CLIENT_ID}`;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('SCRIPT_LOAD_FAIL'));
+    document.head.appendChild(script);
+  });
+}
+
 function pickDisplay(item, ...keys) {
   if (!item || typeof item !== 'object') return '-';
   for (const k of keys) {
@@ -63,6 +90,7 @@ function formatDetailValue(key, val) {
 const Monitoring = () => {
   const { accessToken } = useAuth();
   const mapElement = useRef(null);
+  const [mapStatus, setMapStatus] = useState('loading'); // 'loading' | 'ok' | 'error' | 'no_key'
   const [unassignedList, setUnassignedList] = useState([]);
   const [assignedList, setAssignedList] = useState([]);
   const [unassignedLoading, setUnassignedLoading] = useState(true);
@@ -71,25 +99,41 @@ const Monitoring = () => {
   const [detailLoading, setDetailLoading] = useState(false);
 
   useEffect(() => {
-    const { naver } = window;
-    if (!mapElement.current || !naver) return;
-    const mapOptions = {
-      center: new naver.maps.LatLng(37.5665, 126.9780),
-      zoom: 14,
-      minZoom: 6,
-      zoomControl: true,
-      mapTypeControl: true,
-    };
-    const map = new naver.maps.Map(mapElement.current, mapOptions);
-    new naver.maps.Marker({
-      position: new naver.maps.LatLng(37.5665, 126.9780),
-      map: map,
-      title: '진성욱 기사님',
-      icon: {
-        content: '<div style="font-size:24px;">🚛</div>',
-        anchor: new naver.maps.Point(12, 12),
-      }
-    });
+    if (!mapElement.current) return;
+    if (!NAVER_MAP_CLIENT_ID) {
+      setMapStatus('no_key');
+      return;
+    }
+    setMapStatus('loading');
+    loadNaverMapScript()
+      .then(() => {
+        const { naver } = window;
+        if (!mapElement.current || !naver?.maps) {
+          setMapStatus('error');
+          return;
+        }
+        const mapOptions = {
+          center: new naver.maps.LatLng(37.5665, 126.9780),
+          zoom: 14,
+          minZoom: 6,
+          zoomControl: true,
+          mapTypeControl: true,
+        };
+        const map = new naver.maps.Map(mapElement.current, mapOptions);
+        new naver.maps.Marker({
+          position: new naver.maps.LatLng(37.5665, 126.9780),
+          map: map,
+          title: '진성욱 기사님',
+          icon: {
+            content: '<div style="font-size:24px;">🚛</div>',
+            anchor: new naver.maps.Point(12, 12),
+          }
+        });
+        setMapStatus('ok');
+      })
+      .catch((err) => {
+        setMapStatus(err?.message === 'NO_CLIENT_ID' ? 'no_key' : 'error');
+      });
   }, []);
 
   const refetchLists = useCallback(() => {
@@ -142,7 +186,18 @@ const Monitoring = () => {
     <div className="monitoring-page">
       <div className="monitoring-container">
         <div className="left-section">
-          <div ref={mapElement} className="map-area"></div>
+          <div className="map-area map-area-wrap">
+            <div ref={mapElement} className="map-area-inner" />
+            {mapStatus !== 'ok' && (
+              <div className="map-area-message">
+                {mapStatus === 'no_key' && (
+                  <>지도를 표시하려면 <code>.env</code>에 <code>VITE_NAVER_MAP_CLIENT_ID</code>를 설정해 주세요.</>
+                )}
+                {mapStatus === 'loading' && '지도 로딩 중...'}
+                {mapStatus === 'error' && '지도를 불러올 수 없습니다.'}
+              </div>
+            )}
+          </div>
           <div className="status-table-section">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
               <h3 className="sidebar-title" style={{ marginBottom: 0 }}>● 배차 화물 (운행 현황)</h3>

@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Component, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { setUnauthorizedHandler } from './api/axiosConfig';
 import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './components/Sidebar';
 import Login from './pages/Login';
@@ -11,6 +12,19 @@ import LogMgmt from './pages/LogMgmt';
 import InquiryMgmt from './pages/InquiryMgmt';
 
 import './App.css';
+
+function AuthUnauthorizedHandler({ children }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      logout();
+      navigate('/login', { replace: true });
+    });
+    return () => setUnauthorizedHandler(null);
+  }, [logout, navigate]);
+  return children;
+}
 
 class ErrorBoundary extends Component {
   state = { hasError: false, error: null };
@@ -72,7 +86,9 @@ function App() {
     <ErrorBoundary>
       <Router>
         <AuthProvider>
-          <AppRoutes />
+          <AuthUnauthorizedHandler>
+            <AppRoutes />
+          </AuthUnauthorizedHandler>
         </AuthProvider>
       </Router>
     </ErrorBoundary>

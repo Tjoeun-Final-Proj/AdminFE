@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
-import { getFeeSetting, setFeeSetting } from '../api/Fee';
+import { getFeeSetting, setFeeSetting, getFeeGraph2Weeks } from '../api/Fee';
 import '../styles/FeeMgmt.css';
+
+const formatChartDate = (dateStr) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${m}/${day}`;
+};
 
 const FeeMgmt = () => {
   const { accessToken } = useAuth();
@@ -12,6 +20,8 @@ const FeeMgmt = () => {
   const [saving, setSaving] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editValue, setEditValue] = useState('');
+  const [graphData, setGraphData] = useState({ fromDate: null, toDate: null, points: [] });
+  const [graphLoading, setGraphLoading] = useState(false);
 
   useEffect(() => {
     if (!accessToken) {
@@ -31,6 +41,22 @@ const FeeMgmt = () => {
       })
       .catch((err) => setError(err.message || '수수료율 조회에 실패했습니다.'))
       .finally(() => setLoading(false));
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    setGraphLoading(true);
+    getFeeGraph2Weeks(accessToken)
+      .then((res) => {
+        const points = Array.isArray(res.points) ? res.points : [];
+        setGraphData({
+          fromDate: res.fromDate ?? null,
+          toDate: res.toDate ?? null,
+          points,
+        });
+      })
+      .catch(() => setGraphData({ fromDate: null, toDate: null, points: [] }))
+      .finally(() => setGraphLoading(false));
   }, [accessToken]);
 
   const openModal = () => {
@@ -65,12 +91,17 @@ const FeeMgmt = () => {
     }
   };
 
-  const data = [
-    { name: 'Jan', fee: 55 }, { name: 'Feb', fee: 35 }, { name: 'Mar', fee: 65 },
-    { name: 'Apr', fee: 70 }, { name: 'May', fee: 28 }, { name: 'Jun', fee: 22 },
-    { name: 'Jul', fee: 58 }, { name: 'Aug', fee: 58 }, { name: 'Sep', fee: 75 },
-    { name: 'Oct', fee: 28 }, { name: 'Nov', fee: 28 }, { name: 'Dec', fee: 0 },
-  ];
+  const chartData = (graphData.points || []).map((p) => ({
+    name: formatChartDate(p.date),
+    date: p.date,
+    fee: typeof p.feeRate === 'number' ? Math.round(p.feeRate * 10000) / 100 : 0,
+    changed: p.changed,
+  }));
+
+  const dateRangeLabel =
+    graphData.fromDate && graphData.toDate
+      ? `${graphData.fromDate} ~ ${graphData.toDate}`
+      : '';
 
   return (
     <div className="fee-page">
@@ -86,27 +117,41 @@ const FeeMgmt = () => {
         <button type="button" className="rate-change-btn" onClick={openModal} disabled={loading}>수정 〉</button>
       </div>
 
-      {/* 2. 월별 수수료 차트 영역 */}
+      {/* 2주 일별 수수료 차트 */}
       <div className="chart-container">
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-            <XAxis 
-              dataKey="name" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#94a3b8', fontSize: 12 }} 
-            />
-            <YAxis hide />
-            <Tooltip cursor={{ fill: '#f8fafc' }} />
-            <Bar 
-              dataKey="fee" 
-              fill="#BCE3EC" 
-              radius={[4, 4, 0, 0]} 
-              barSize={40}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="chart-header">
+          <h3 className="chart-title">수수료 추이</h3>
+          {dateRangeLabel && <span className="chart-date-range">{dateRangeLabel}</span>}
+        </div>
+        {graphLoading ? (
+          <div className="chart-loading">수수료 데이터 로딩 중...</div>
+        ) : chartData.length === 0 ? (
+          <div className="chart-loading">표시할 2주 데이터가 없습니다.</div>
+        ) : (
+          <ResponsiveContainer width="100%" height={350}>
+            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#94a3b8', fontSize: 12 }}
+              />
+              <YAxis hide />
+              <Tooltip
+                cursor={{ fill: '#f8fafc' }}
+                formatter={(value) => [`${value}%`, '수수료율']}
+                labelFormatter={(_, payload) => payload[0]?.payload?.date ?? ''}
+              />
+              <Bar
+                dataKey="fee"
+                fill="#BCE3EC"
+                radius={[4, 4, 0, 0]}
+                barSize={Math.max(20, 400 / chartData.length)}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* 3. 하단 누적 수수료 바 */}

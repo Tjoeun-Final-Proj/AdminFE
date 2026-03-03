@@ -69,10 +69,40 @@
 /* 차트 컨테이너 */
 .chart-container {
   background: white;
-  border: 2px solid #389CD7; /* 이미지의 파란색 테두리 반영 */
+  border: 2px solid #389CD7;
   border-radius: 12px;
   padding: 40px 20px 20px 20px;
   margin-bottom: 40px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #334155;
+  margin: 0;
+}
+
+.chart-date-range {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  color: #64748b;
+  font-size: 14px;
 }
 
 /* 하단 누적 수수료 바 */

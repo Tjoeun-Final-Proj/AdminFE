@@ -1,43 +1,98 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { getContactList, getContactDetail, answerContact } from '../api/contact';
 import '../styles/InquiryMgmt.css';
 
+const formatDateTime = (dateStr) => {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const h = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${y}.${m}.${day} ${h}:${min}`;
+};
+
+const userTypeLabel = (type) => (type === 'SHIPPER' ? '화주' : type === 'DRIVER' ? '차주' : type ?? '-');
+
 const InquiryMgmt = () => {
+  const { accessToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedInquiry, setSelectedInquiry] = useState(null);
-  const [inquiryReplies, setInquiryReplies] = useState({});
+  const [list, setList] = useState([]);
+  const [listLoading, setListLoading] = useState(false);
+  const [detail, setDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [replyText, setReplyText] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [replyError, setReplyError] = useState('');
 
-  const inquiries = [
-    { time: '2026.02.02', user: '손은섭', content: '###차주@@승인 어쩌구 저쩌구 관련 문의드립니다.' },
-    { time: '2026.02.02', user: '손은섭', content: '###차주@@승인 어쩌구 저쩌구 결제 오류가 발생해요.' },
-    { time: '2026.02.02', user: '손은섭', content: '###차주@@승인 어쩌구 저쩌구 화물 등록은 어떻게 하나요?' },
-    { time: '2026.02.02', user: '손은섭', content: '###차주@@승인 어쩌구 저쩌구 계정 정지 해제 요청합니다.' },
-    { time: '2026.02.02', user: '손은섭', content: '###차주@@승인 어쩌구 저쩌구' },
-  ];
-
-  const handleSubmitReply = () => {
-    if (selectedInquiry == null || !replyText.trim()) return;
-    const idx = selectedInquiry.index;
-    if (inquiryReplies[idx]) return;
-    setInquiryReplies(prev => ({ ...prev, [idx]: replyText.trim() }));
-    setReplyText('');
+  const loadList = () => {
+    if (!accessToken) return;
+    setListLoading(true);
+    getContactList(accessToken)
+      .then((data) => setList(Array.isArray(data) ? data : []))
+      .catch(() => setList([]))
+      .finally(() => setListLoading(false));
   };
+
+  useEffect(() => {
+    loadList();
+  }, [accessToken]);
+
+  const openDetail = (contactId) => {
+    setDetail(null);
+    setReplyText('');
+    setReplyError('');
+    setDetailLoading(true);
+    getContactDetail(accessToken, contactId)
+      .then((data) => setDetail(data))
+      .catch(() => setDetail(null))
+      .finally(() => setDetailLoading(false));
+  };
+
+  const closeDetail = () => {
+    setDetail(null);
+    setReplyText('');
+    setReplyError('');
+    loadList();
+  };
+
+  const handleSubmitReply = async (e) => {
+    e.preventDefault();
+    const contactId = detail?.contact?.contactId ?? detail?.contactId;
+    if (contactId == null || !replyText.trim() || !accessToken) return;
+    setReplyError('');
+    setSubmitting(true);
+    try {
+      await answerContact(accessToken, {
+        contactId,
+        answerContent: replyText.trim(),
+      });
+      setReplyText('');
+      getContactDetail(accessToken, contactId).then((data) => setDetail(data));
+      loadList();
+    } catch (err) {
+      setReplyError(err.response?.data?.message ?? err.message ?? '답변 등록에 실패했습니다.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const filteredList = list.filter((item) => {
+    const content = item.contactContent ?? item.content ?? '';
+    return content.includes(searchTerm);
+  });
 
   return (
     <div className="inquiry-page">
-      {!selectedInquiry && (
+      {detail == null ? (
         <>
           <div className="inquiry-controls">
             <div className="filter-group">
-              <div className="date-tabs">
-                <button className="tab active">Today</button>
-                <button className="tab">Yesterday</button>
-                <button className="tab">Last 7 days</button>
-                <button className="tab">Last 30 days</button>
-                <button className="tab">Last month</button>
-                <input type="date" className="date-input" defaultValue="2022-02-08" />
-              </div>
-              <button className="refresh-btn">🔄 새로고침</button>
+              <button type="button" className="refresh-btn" onClick={loadList} disabled={listLoading}>
+                새로고침
+              </button>
             </div>
           </div>
           <div className="search-row">
@@ -52,86 +107,147 @@ const InquiryMgmt = () => {
               <button type="button" className="unified-search-btn">검색</button>
             </div>
           </div>
-        </>
-      )}
-
-      {selectedInquiry ? (
-        <div className="inquiry-detail">
-          <button type="button" className="inquiry-detail-back" onClick={() => { setSelectedInquiry(null); setReplyText(''); }}>
-            ← 목록으로
-          </button>
-          <h2 className="inquiry-detail-title">문의 상세</h2>
-          <div className="inquiry-detail-card">
-            <div className="inquiry-detail-row">
-              <span className="inquiry-detail-label">문의 시각</span>
-              <span>{selectedInquiry.item.time}</span>
-            </div>
-            <div className="inquiry-detail-row">
-              <span className="inquiry-detail-label">사용자</span>
-              <span>{selectedInquiry.item.user}</span>
-            </div>
-            <div className="inquiry-detail-row inquiry-detail-content">
-              <span className="inquiry-detail-label">문의 내용</span>
-              <p>{selectedInquiry.item.content}</p>
-            </div>
+          <div className="inquiry-table-container">
+            {listLoading ? (
+              <p className="inquiry-loading">문의 목록 로딩 중...</p>
+            ) : (
+              <table className="inquiry-table">
+                <thead>
+                  <tr>
+                    <th className="th-time">문의 시각</th>
+                    <th className="th-user">문의 회원</th>
+                    <th className="th-content">문의 내용</th>
+                    <th className="th-status">답변상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredList.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="inquiry-empty">문의가 없습니다.</td>
+                    </tr>
+                  ) : (
+                    filteredList.map((item) => (
+                      <tr
+                        key={item.contactId ?? item.id}
+                        className="inquiry-table-row-clickable"
+                        onClick={() => openDetail(item.contactId ?? item.id)}
+                      >
+                        <td className="td-time">{formatDateTime(item.createdAt)}</td>
+                        <td className="td-user">{item.userId?.name ?? '-'}</td>
+                        <td className="td-content">
+                          {(item.contactContent ?? item.content ?? '').slice(0, 50)}
+                          {(item.contactContent ?? item.content ?? '').length > 50 ? '…' : ''}
+                        </td>
+                        <td className="td-status">
+                          {item.answerContent != null && item.answerContent !== '' ? (
+                            <span className="inquiry-status-done">답변 완료</span>
+                          ) : (
+                            <span className="inquiry-status-pending">미답변</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
-          {inquiryReplies[selectedInquiry.index] && (
-            <div className="inquiry-replies-list">
-              <h3 className="inquiry-replies-title">답변</h3>
-              <div className="inquiry-reply-item">
-                <span className="inquiry-reply-badge">관리자</span>
-                <p>{inquiryReplies[selectedInquiry.index]}</p>
-              </div>
-            </div>
-          )}
-          {!inquiryReplies[selectedInquiry.index] && (
-            <div className="inquiry-reply-form">
-              <h3 className="inquiry-reply-form-title">답변 작성</h3>
-              <div className="inquiry-reply-input-wrap">
-                <textarea
-                  className="inquiry-reply-textarea"
-                  placeholder="답변을 입력하세요"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  rows={4}
-                />
-                <button type="button" className="inquiry-reply-submit" onClick={handleSubmitReply}>
-                  답변 등록
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+        </>
       ) : (
-        <div className="inquiry-table-container">
-          <table className="inquiry-table">
-            <thead>
-              <tr>
-                <th className="th-time">문의 내역 입력 시각</th>
-                <th className="th-user">사용자 명</th>
-                <th className="th-content">문의 내용</th>
-                <th className="th-status">답변상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inquiries.map((item, idx) => (
-                <tr
-                  key={idx}
-                  className="inquiry-table-row-clickable"
-                  onClick={() => setSelectedInquiry({ item, index: idx })}
-                >
-                  <td className="td-time">{item.time}</td>
-                  <td className="td-user">{item.user}</td>
-                  <td className="td-content">{item.content}</td>
-                  <td className="td-status">
-                    {inquiryReplies[idx] ? (
-                      <span className="inquiry-status-done">답변 완료</span>
-                    ) : null}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="inquiry-detail">
+          <header className="inquiry-detail-header">
+            <button type="button" className="inquiry-detail-back" onClick={closeDetail}>
+              ← 목록으로
+            </button>
+          </header>
+          {detailLoading ? (
+            <p className="inquiry-loading">상세 로딩 중...</p>
+          ) : (
+            (() => {
+              const c = detail.contact ?? detail;
+              const imageUrls = detail.contactAttatchment ?? detail.imageUrls ?? [];
+              return (
+                <div className="inquiry-detail-body">
+                  <section className="inquiry-detail-section inquiry-detail-user-card">
+                    <h3 className="inquiry-detail-section-title">문의 회원</h3>
+                    <div className="inquiry-detail-user-grid">
+                      <div className="inquiry-detail-user-item inquiry-detail-user-item-name">
+                        <span className="inquiry-detail-user-label">이름</span>
+                        <span className="inquiry-detail-user-value">
+                          {c.userId?.name ?? '-'}
+                          <span className={`inquiry-detail-user-type inquiry-detail-user-type--${(c.userId?.userType ?? '').toLowerCase()}`}>
+                            {userTypeLabel(c.userId?.userType)}
+                          </span>
+                        </span>
+                      </div>
+                      <div className="inquiry-detail-user-item">
+                        <span className="inquiry-detail-user-label">이메일</span>
+                        <span className="inquiry-detail-user-value">{c.userId?.email ?? '-'}</span>
+                      </div>
+                      <div className="inquiry-detail-user-item">
+                        <span className="inquiry-detail-user-label">연락처</span>
+                        <span className="inquiry-detail-user-value">{c.userId?.phone ?? '-'}</span>
+                      </div>
+                    </div>
+                    <p className="inquiry-detail-time-text">{formatDateTime(c.createdAt)}</p>
+                  </section>
+
+                  <section className="inquiry-detail-section inquiry-detail-content-card">
+                    <h3 className="inquiry-detail-section-title">문의 내용</h3>
+                    <div className="inquiry-detail-content-body">
+                      <p>{c.contactContent ?? c.content ?? '-'}</p>
+                    </div>
+                    {imageUrls.length > 0 && (
+                      <div className="inquiry-detail-images">
+                        {imageUrls.map((url, i) => (
+                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inquiry-image-wrap">
+                            <img src={url} alt={`문의 이미지 ${i + 1}`} className="inquiry-image" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+
+                  {c.answerContent != null && c.answerContent !== '' && (
+                    <section className="inquiry-detail-section inquiry-detail-answer-card">
+                      <h3 className="inquiry-detail-section-title">답변</h3>
+                      <div className="inquiry-reply-item">
+                        <div className="inquiry-reply-meta">
+                          <span className="inquiry-reply-badge">{c.answererId?.name ?? '관리자'}</span>
+                          {c.answeredAt && (
+                            <span className="inquiry-reply-date">{formatDateTime(c.answeredAt)}</span>
+                          )}
+                        </div>
+                        <p className="inquiry-reply-body">{c.answerContent}</p>
+                      </div>
+                    </section>
+                  )}
+
+                  {(!c.answerContent || c.answerContent === '') && (
+                    <section className="inquiry-detail-section inquiry-detail-reply-form-card">
+                      <h3 className="inquiry-detail-section-title">답변 작성</h3>
+                      <form onSubmit={handleSubmitReply}>
+                        {replyError && <p className="inquiry-reply-error">{replyError}</p>}
+                        <textarea
+                          className="inquiry-reply-textarea"
+                          placeholder="답변을 입력하세요"
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          rows={5}
+                          disabled={submitting}
+                        />
+                        <div className="inquiry-reply-form-actions">
+                          <button type="submit" className="inquiry-reply-submit" disabled={submitting || !replyText.trim()}>
+                            {submitting ? '등록 중...' : '답변 등록'}
+                          </button>
+                        </div>
+                      </form>
+                    </section>
+                  )}
+                </div>
+              );
+            })()
+          )}
         </div>
       )}
     </div>
