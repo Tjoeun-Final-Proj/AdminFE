@@ -91,3 +91,125 @@
 .footer-logout-btn:hover {
   color: #dc2626;
 }
+
+.footer-delete-account-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 12px;
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer-delete-account-btn:hover {
+  color: #dc2626;
+}
+
+/* 계정 탈퇴 모달 */
+.sidebar-delete-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.sidebar-delete-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-delete-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+.sidebar-delete-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.sidebar-delete-error {
+  color: #dc2626;
+  font-size: 13px;
+  margin: 0 0 12px 0;
+}
+
+.sidebar-delete-field {
+  margin-bottom: 20px;
+}
+
+.sidebar-delete-field label {
+  display: block;
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.sidebar-delete-field input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.sidebar-delete-field input:focus {
+  outline: none;
+  border-color: var(--primary-blue, #01439C);
+}
+
+.sidebar-delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.sidebar-delete-btn {
+  padding: 10px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sidebar-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.sidebar-delete-btn.cancel {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.sidebar-delete-btn.cancel:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.sidebar-delete-btn.submit {
+  background: #dc2626;
+  color: #fff;
+}
+
+.sidebar-delete-btn.submit:hover:not(:disabled) {
+  background: #b91c1c;
+}

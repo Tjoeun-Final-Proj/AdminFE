@@ -136,10 +136,14 @@ export async function deletePenalty(accessToken, penaltyId) {
   });
 }
 
-/** POST /api/admin/create → 관리자 계정 생성 */
-export async function createAdmin({ name, loginId, password }) {
+/** POST /api/admin/create → 관리자 계정 생성 (Authorization: Bearer 필요, @AuthenticationPrincipal adminId 사용) */
+export async function createAdmin(accessToken, { name, loginId, password }) {
   try {
-    await axios.post(`${API_BASE}/admin/create`, { name, loginId, password });
+    await axios.post(
+      `${API_BASE}/admin/create`,
+      { name, loginId, password },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
   } catch (err) {
     if (err.response) {
       const msg = err.response.data?.message ?? err.response.data ?? `생성 실패: ${err.response.status}`;

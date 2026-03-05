@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
     if (access) {
       localStorage.setItem(TOKEN_KEY_ACCESS, access);
       setAccessTokenState(access);
+      setDisplayNameState(null); // 새 로그인 시 이전 이름 제거, useEffect에서 /me로 채움
     } else {
       localStorage.removeItem(TOKEN_KEY_ACCESS);
       setAccessTokenState(null);

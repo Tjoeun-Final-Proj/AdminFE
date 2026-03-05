@@ -36,3 +36,27 @@ export async function getAdminInfo(accessToken) {
   return data ?? {};
 }
 
+/** axios 에러에서 사용자에게 보여줄 메시지 추출 (백엔드 message/error/detail 등) */
+function getErrorMessage(err, fallback = '처리에 실패했습니다.') {
+  const data = err.response?.data;
+  if (!data) return err.message || fallback;
+  if (typeof data === 'string') return data;
+  const msg = data.message ?? data.error ?? data.detail ?? data.msg;
+  if (msg && typeof msg === 'string') return msg;
+  return err.message || fallback;
+}
+
+/** POST /api/admin/delete → 현재 로그인 관리자 계정 탈퇴 (RequestBody: 비밀번호 평문, Authorization: Bearer 필요) */
+export async function deleteAdmin(accessToken, password) {
+  try {
+    await axios.post(`${API_BASE}/admin/delete`, password, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'text/plain; charset=UTF-8',
+      },
+    });
+  } catch (err) {
+    throw new Error(getErrorMessage(err, '탈퇴 처리에 실패했습니다.'));
+  }
+}
+

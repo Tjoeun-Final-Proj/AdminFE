@@ -89,3 +89,11 @@
 .time-cell, .admin-cell { width: 150px; }
 .type-cell { width: 150px; }
 .content-cell { font-weight: 500; color: #000; }
+
+.log-loading,
+.log-empty {
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}

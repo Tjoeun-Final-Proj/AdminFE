@@ -256,7 +256,7 @@ const MemberMgmt = () => {
     setCreateError('');
     setCreating(true);
     try {
-      await createAdmin({
+      await createAdmin(accessToken, {
         name: adminForm.name.trim(),
         loginId: adminForm.loginId.trim(),
         password: adminForm.password,
