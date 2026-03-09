@@ -324,3 +324,36 @@
   color: #94a3b8;
   padding: 24px !important;
 }
+
+.member-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 12px 0;
+}
+
+.member-page-btn {
+  padding: 0 8px;
+  font-size: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #334155;
+}
+
+.member-page-btn:hover:not(:disabled) {
+  color: #01439C;
+  text-decoration: underline;
+}
+
+.member-page-btn:disabled {
+  color: #cbd5e1;
+  cursor: default;
+}
+
+.member-page-info {
+  font-size: 14px;
+  color: #64748b;
+}

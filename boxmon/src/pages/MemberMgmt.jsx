@@ -6,6 +6,7 @@ import MemberDetail from './MemberDetail';
 import '../styles/MemberMgmt.css';
 
 const ROLE_TABS = ['전체', '차주', '화주', '관리자'];
+const PAGE_SIZE = 15;
 
 function getBadgeClass(role) {
   if (role === '차주') return 'driver';
@@ -45,6 +46,7 @@ const MemberMgmt = () => {
   const [penaltyError, setPenaltyError] = useState('');
   const [penaltyAdding, setPenaltyAdding] = useState(false);
   const [penaltyDeletingId, setPenaltyDeletingId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (!accessToken) {
@@ -140,6 +142,15 @@ const MemberMgmt = () => {
     const matchSearch = (m.name && m.name.includes(searchTerm)) || (m.id && m.id.includes(searchTerm)) || (m.displayId && m.displayId.includes(searchTerm));
     return isRoleMatch && matchSearch;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const paginatedData = filteredData.slice(pageStart, pageStart + PAGE_SIZE);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, searchTerm]);
 
   const openModal = () => {
     setAdminForm({ name: '', loginId: '', password: '' });
@@ -333,7 +344,7 @@ const MemberMgmt = () => {
                     </td>
                   </tr>
                 ) : (
-                  filteredData.map(m => (
+                  paginatedData.map(m => (
                     <tr
                       key={`${m.role}-${m.id}`}
                       className="member-table-row-clickable"
@@ -355,6 +366,29 @@ const MemberMgmt = () => {
               </tbody>
             </table>
           </div>
+          {filteredData.length > 0 && totalPages > 1 && (
+            <div className="member-pagination">
+              <button
+                type="button"
+                className="member-page-btn"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+              >
+                이전
+              </button>
+              <span className="member-page-info">
+                {safePage} / {totalPages} (총 {filteredData.length}명)
+              </span>
+              <button
+                type="button"
+                className="member-page-btn"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+              >
+                다음
+              </button>
+            </div>
+          )}
         </>
       )}
 

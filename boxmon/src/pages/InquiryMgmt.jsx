@@ -16,6 +16,8 @@ const formatDateTime = (dateStr) => {
 
 const userTypeLabel = (type) => (type === 'SHIPPER' ? '화주' : type === 'DRIVER' ? '차주' : type ?? '-');
 
+const PAGE_SIZE = 15;
+
 const InquiryMgmt = () => {
   const { accessToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,13 +28,20 @@ const InquiryMgmt = () => {
   const [replyText, setReplyText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [replyError, setReplyError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadList = () => {
     if (!accessToken) return;
     setListLoading(true);
     getContactList(accessToken)
-      .then((data) => setList(Array.isArray(data) ? data : []))
-      .catch(() => setList([]))
+      .then((data) => {
+        setList(Array.isArray(data) ? data : []);
+        setCurrentPage(1);
+      })
+      .catch(() => {
+        setList([]);
+        setCurrentPage(1);
+      })
       .finally(() => setListLoading(false));
   };
 
@@ -79,10 +88,26 @@ const InquiryMgmt = () => {
     }
   };
 
-  const filteredList = list.filter((item) => {
-    const content = item.contactContent ?? item.content ?? '';
-    return content.includes(searchTerm);
-  });
+  const filteredList = list
+    .filter((item) => {
+      const content = item.contactContent ?? item.content ?? '';
+      return content.includes(searchTerm);
+    })
+    .sort((a, b) => {
+      const idA = a.contactId ?? a.id ?? 0;
+      const idB = b.contactId ?? b.id ?? 0;
+      return Number(idA) - Number(idB);
+    });
+
+  const totalPages = Math.max(1, Math.ceil(filteredList.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pageStart = (safePage - 1) * PAGE_SIZE;
+  const paginatedList = filteredList.slice(pageStart, pageStart + PAGE_SIZE);
+
+  const handleInquirySearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="inquiry-page">
@@ -102,7 +127,7 @@ const InquiryMgmt = () => {
                 className="unified-search-input"
                 placeholder="문의 내용 검색"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleInquirySearchChange}
               />
               <button type="button" className="unified-search-btn">검색</button>
             </div>
@@ -114,6 +139,7 @@ const InquiryMgmt = () => {
               <table className="inquiry-table">
                 <thead>
                   <tr>
+                    <th className="th-id">번호</th>
                     <th className="th-time">문의 시각</th>
                     <th className="th-user">문의 회원</th>
                     <th className="th-content">문의 내용</th>
@@ -121,17 +147,18 @@ const InquiryMgmt = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredList.length === 0 ? (
+                  {paginatedList.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="inquiry-empty">문의가 없습니다.</td>
+                      <td colSpan={5} className="inquiry-empty">문의가 없습니다.</td>
                     </tr>
                   ) : (
-                    filteredList.map((item) => (
+                    paginatedList.map((item) => (
                       <tr
                         key={item.contactId ?? item.id}
                         className="inquiry-table-row-clickable"
                         onClick={() => openDetail(item.contactId ?? item.id)}
                       >
+                        <td className="td-id">{item.contactId ?? item.id ?? '-'}</td>
                         <td className="td-time">{formatDateTime(item.createdAt)}</td>
                         <td className="td-user">{item.userId?.name ?? '-'}</td>
                         <td className="td-content">
@@ -150,6 +177,29 @@ const InquiryMgmt = () => {
                   )}
                 </tbody>
               </table>
+            )}
+            {!listLoading && filteredList.length > 0 && totalPages > 1 && (
+              <div className="inquiry-pagination">
+                <button
+                  type="button"
+                  className="inquiry-page-btn"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={safePage <= 1}
+                >
+                  이전
+                </button>
+                <span className="inquiry-page-info">
+                  {safePage} / {totalPages} (총 {filteredList.length}건)
+                </span>
+                <button
+                  type="button"
+                  className="inquiry-page-btn"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={safePage >= totalPages}
+                >
+                  다음
+                </button>
+              </div>
             )}
           </div>
         </>

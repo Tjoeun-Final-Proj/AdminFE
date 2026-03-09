@@ -25,9 +25,9 @@
 }
 
 .menu-item.active {
-  background-color: var(--sky-blue);
-  color: var(--primary-blue);
-  border-right: 4px solid var(--primary-blue);
+  background-color: #d0e4f0;
+  color: #334155;
+  border-right: 4px solid #8bb4d0;
   font-weight: bold;
 }
 

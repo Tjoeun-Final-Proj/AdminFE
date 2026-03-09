@@ -95,6 +95,7 @@
   background-color: #f8fafc;
 }
 
+.th-id, .td-id { width: 70px; text-align: center; }
 .th-time, .td-time { width: 200px; }
 .th-user, .td-user { width: 150px; }
 .td-content { 
@@ -428,4 +429,37 @@
   color: #dc2626;
   font-size: 13px;
   margin: 0 0 10px 0;
+}
+
+.inquiry-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 12px 0;
+}
+
+.inquiry-page-btn {
+  padding: 0 8px;
+  font-size: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #334155;
+}
+
+.inquiry-page-btn:hover:not(:disabled) {
+  color: #01439C;
+  text-decoration: underline;
+}
+
+.inquiry-page-btn:disabled {
+  color: #cbd5e1;
+  cursor: default;
+}
+
+.inquiry-page-info {
+  font-size: 14px;
+  color: #64748b;
 }
