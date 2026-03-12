@@ -154,15 +154,6 @@ const FeeMgmt = () => {
         )}
       </div>
 
-      {/* 3. 하단 누적 수수료 바 */}
-      <div className="total-fee-bar">
-        <div className="total-amount">
-          <span className="currency">$</span>
-          <span className="amount">3000000</span>
-        </div>
-        <span className="total-label-text">누적 수수료</span>
-      </div>
-
       {modalOpen && (
         <div className="fee-modal-overlay" onClick={closeModal}>
           <div className="fee-modal" onClick={(e) => e.stopPropagation()}>

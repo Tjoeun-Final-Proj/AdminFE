@@ -105,34 +105,6 @@
   font-size: 14px;
 }
 
-/* 하단 누적 수수료 바 */
-.total-fee-bar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  background: white;
-  padding: 15px 30px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  gap: 20px;
-}
-
-.total-amount {
-  color: #389CD7;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.total-amount .currency {
-  margin-right: 10px;
-}
-
-.total-label-text {
-  font-size: 16px;
-  font-weight: 600;
-  color: #000;
-}
-
 .fee-modal-overlay {
   position: fixed;
   inset: 0;
